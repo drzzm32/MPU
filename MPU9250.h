@@ -12,7 +12,7 @@
 
 #include <SPI.h>
 #ifdef SOFT_IIC
-#include "SoftWire.hpp"
+#include "SoftWire.h"
 #else
 #include <Wire.h>
 #endif
