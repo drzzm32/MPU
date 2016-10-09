@@ -64,7 +64,7 @@
 #include <Arduino.h>
 
 #ifndef _SOFTI2C_H
-#define _SOFTI2C_H  1
+#define _SOFTI2C_H
 
 #define I2C_FASTMODE 1
 #define SDA_PIN 0 

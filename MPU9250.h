@@ -11,9 +11,7 @@
 #define SOFT_IIC
 
 #include <SPI.h>
-#ifdef SOFT_IIC
-#include "SoftWire.h"
-#else
+#ifndef SOFT_IIC
 #include <Wire.h>
 #endif
 
@@ -239,14 +237,11 @@ class MPU9250
     // Stores the 16-bit signed accelerometer sensor output
     int16_t accelCount[3];
 
-    #ifdef SOFT_IIC
-    SoftWire* wire;
-    #endif
+    void (*wB)(uint8_t, uint8_t, uint8_t);
+    uint8_t (*rB)(uint8_t, uint8_t);
+    void (*rBs)(uint8_t, uint8_t, uint8_t, uint8_t *);
     
   public:
-    #ifdef SOFT_IIC
-    MPU9250(uint8_t sdaPin, uint8_t sclPin);
-    #endif
     void getMres();
     void getGres();
     void getAres();

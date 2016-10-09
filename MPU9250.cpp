@@ -445,10 +445,7 @@ void MPU9250::MPU9250SelfTest(float * destination) // Should return percent devi
 void MPU9250::writeByte(uint8_t address, uint8_t subAddress, uint8_t data)
 {
   #ifdef SOFT_IIC
-  wire->beginTransmission(address);  // Initialize the Tx buffer
-  wire->write(subAddress);           // Put slave register address in Tx buffer
-  wire->write(data);                 // Put data in Tx buffer
-  wire->endTransmission();           // Send the Tx buffer
+  (*wB)(address, subAddress, data);
   #else
   Wire.beginTransmission(address);  // Initialize the Tx buffer
   Wire.write(subAddress);           // Put slave register address in Tx buffer
@@ -461,11 +458,7 @@ uint8_t MPU9250::readByte(uint8_t address, uint8_t subAddress)
 {
   uint8_t data; // `data` will store the register data   
   #ifdef SOFT_IIC
-  wire->beginTransmission(address);         // Initialize the Tx buffer
-  wire->write(subAddress);                  // Put slave register address in Tx buffer
-  wire->endTransmission(false);             // Send the Tx buffer, but send a restart to keep connection alive
-  wire->requestFrom(address, (uint8_t) 1);  // Read one byte from slave register address 
-  data = wire->read();                      // Fill Rx buffer with result
+  (*rB)(address, subAddress);
   #else
   Wire.beginTransmission(address);         // Initialize the Tx buffer
   Wire.write(subAddress);                  // Put slave register address in Tx buffer
@@ -480,13 +473,7 @@ void MPU9250::readBytes(uint8_t address, uint8_t subAddress, uint8_t count,
                         uint8_t * dest)
 {  
   #ifdef SOFT_IIC
-  wire->beginTransmission(address);   // Initialize the Tx buffer
-  wire->write(subAddress);            // Put slave register address in Tx buffer
-  wire->endTransmission(false);       // Send the Tx buffer, but send a restart to keep connection alive
-  uint8_t i = 0;
-  wire->requestFrom(address, count);  // Read bytes from slave register address 
-  while (wire->available()) {
-    dest[i++] = wire->read(); }         // Put read results in the Rx buffer
+  (*rBs)(address, subAddress, count, dest);
   #else
   Wire.beginTransmission(address);   // Initialize the Tx buffer
   Wire.write(subAddress);            // Put slave register address in Tx buffer
@@ -498,8 +485,3 @@ void MPU9250::readBytes(uint8_t address, uint8_t subAddress, uint8_t count,
   #endif
 }
 
-#ifdef SOFT_IIC
-MPU9250::MPU9250(uint8_t sdaPin, uint8_t sclPin) {
-  wire = new SoftWire();
-}
-#endif
