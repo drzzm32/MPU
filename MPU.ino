@@ -1,13 +1,12 @@
 #include "quaternionFilters.h"
 #include "MPU9250.h"
-MPU9250 myIMU(A0, A1);
+MPU9250 myIMU;
 
 bool first = true;
 float data[3];
 uint16_t count = 50;
 
 void setup() {
-    myIMU.wire->begin();
 	Serial.begin(115200);
 
 	byte c = myIMU.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
